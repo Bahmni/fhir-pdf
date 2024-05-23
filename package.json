@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",
+    "fhirpath": "^3.13.2",
     "puppeteer": "^22.9.0"
   }
 }

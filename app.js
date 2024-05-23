@@ -3,10 +3,12 @@ const puppeteer = require('puppeteer');
 const fs = require('fs'),
     ejs = require("ejs");
 
+const fhirPath = require('fhirpath');
+
 function ejs2html(path, data) {
-    fs.readFile(path, 'utf8', async function (err, data) {
+    fs.readFile(path, 'utf8', async function (err, content) {
         if (err) { console.log(err); return false; }
-        var ejs_string = data,
+        var ejs_string = content,
             template = ejs.compile(ejs_string),
             html = template(data);
         await generatePDF(html);
@@ -41,7 +43,7 @@ var person = {
     address:"Klassik Benchmark"
 }
 
-const fhirPatient = {
+var fhirPatient = {
     "resourceType": "Patient",
     "id": "example",
     "address": [
@@ -195,6 +197,7 @@ const fhirPatient = {
         ]
       }
     ]
-  }
+}
 
-ejs2html("/Users/angshus/work/projects/fhir-pdf/public/op-consult.template", { person: person, fhirPatient: fhirPatient})
+ejs2html("/Users/angshus/work/projects/fhir-pdf/public/op-consult.template", { fhirPath: fhirPath, person: person, fhirPatient: fhirPatient } )
+//ejs2html("/Users/angshus/work/projects/fhir-pdf/public/op-consult.template", { person: person} )

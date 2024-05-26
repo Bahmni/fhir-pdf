@@ -6,9 +6,15 @@ const routes = (request, response) => {
   switch (reqMethod) {
     case "GET": {
       if (reqURL === "/op-consult-record") {
-        opConsultRecordHandler(request, response);
+        opConsultRecordHandler(request, response, true);
       }
       break;
+    }
+    case "POST": {
+        if (reqURL === "/op-consult-record") {
+            opConsultRecordHandler(request, response, false);
+        }
+        break;
     }
     default: {
       defaultHandler(request, response);

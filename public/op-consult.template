@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-    <title>Home Page</title> 
+    <title>OP Consultation</title> 
   
     <style type="text/css" media="screen"> 
         body {
@@ -42,10 +42,10 @@
             margin: 20px 0 70px 0;
         }
 
-        .invoice-info-container {
+        .provider-info-container {
             font-size: 0.875em;
         }
-        .invoice-info-container td {
+        .provider-info-container td {
             padding: 4px 0;
         }
 
@@ -193,17 +193,17 @@
       <div class="logo-container">
         <img
           style="height: 18px"
-          src="https://app.useanvil.com/img/email-logo-black.png"
+          src="https://images.squarespace-cdn.com/content/v1/54358a40e4b0d0810faf80c2/1449227490774-VM0J81B5NXHRUIGXPF5H/Bahmni+logo+black+font.png?format=200w"
         >
       </div>
       
-      <table class="invoice-info-container">
+      <table class="provider-info-container">
         <tr>
           <td rowspan="2" class="client-name">
-            Client Name
+            <%=evaluatePath('Bundle.entry.select(resource as Organization).name')%>
           </td>
           <td>
-            <%=person.name%>
+            <%=evaluatePath('Bundle.entry.select(resource as Patient).name.text.first()')%>
           </td>
         </tr>
         <tr>
@@ -213,19 +213,18 @@
         </tr>
         <tr>
           <td>
-            Invoice Date: <strong>May 24th, 2024</strong>
+            Reg No: <strong>12345</strong>
           </td>
           <td>
-            San Francisco CA, 94103
-            <%=fhirPath.evaluate(fhirPatient, 'Patient.name.first().given.first()')%>
+            Ganiyari, Bilaspur
           </td>
         </tr>
         <tr>
           <td>
-            Invoice No: <strong>12345</strong>
+            Date: <strong>May 24th, 2024</strong>
           </td>
           <td>
-            hello@useanvil.com
+            drJain@jss.org
           </td>
         </tr>
       </table>
@@ -234,30 +233,30 @@
       <table class="line-items-container">
         <thead>
           <tr>
-            <th class="heading-quantity">Qty</th>
-            <th class="heading-description">Description</th>
-            <th class="heading-price">Price</th>
-            <th class="heading-subtotal">Subtotal</th>
+            <th class="heading-quantity">Serial</th>
+            <th class="heading-description">Medication</th>
+            <th class="heading-price">Dosage</th>
+            <th class="heading-subtotal">Total</th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <td>1</td>
+            <td>Paracetamol 500 mg</td>
+            <td class="right">Twice a day</td>
+            <td class="bold">30.00</td>
+          </tr>
+          <tr>
             <td>2</td>
-            <td>Blue large widgets</td>
-            <td class="right">$15.00</td>
-            <td class="bold">$30.00</td>
+            <td>Ibuprofen</td>
+            <td class="right">SOS</td>
+            <td class="bold">40.00</td>
           </tr>
           <tr>
-            <td>4</td>
-            <td>Green medium widgets</td>
-            <td class="right">$10.00</td>
-            <td class="bold">$40.00</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Red small widgets with logo</td>
-            <td class="right">$7.00</td>
-            <td class="bold">$35.00</td>
+            <td>3</td>
+            <td>Pantopazole</td>
+            <td class="right">Once a day</td>
+            <td class="bold">35.00</td>
           </tr>
         </tbody>
       </table>

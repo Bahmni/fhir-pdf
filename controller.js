@@ -1,13 +1,9 @@
 const puppeteer = require('puppeteer');
 const fhirPath = require('fhirpath');
+const fhirpath_r4_model = require('fhirpath/fhir-context/r4');
 const fs = require('fs'),
     ejs = require("ejs");
 const path = require('path');    
-
-var person = {
-    name:"Angshuman",
-    address:"Klassik Benchmark"
-}
 
 var fhirPatient = {
     "resourceType": "Patient",
@@ -176,18 +172,29 @@ function generateHtml(template, data) {
             console.log(err);
             reject('Could not generate html');
         }
-
     });
 }
+
+var templateCache = [];
 
 function fetchTemplate(path) {
     return new Promise((resolve, reject) => {
         console.log("fetching template .... ");
+        const cachedContent = templateCache.find( e => e.path === path);
+        if (cachedContent) {
+            console.log("Returning cached template .... ");
+            resolve(cachedContent.content);
+            return;
+        }
         fs.readFile(path, 'utf8', (err, content) => {
             if (err) { 
                 console.log(err); 
                 reject('Could not read template file'); 
             } else {
+                templateCache.push({
+                    "path": path,
+                    "content": content
+                });
                 resolve(content);
             }
         });
@@ -222,7 +229,9 @@ function createPdf(path, data) {
         .then((html) => generatePdf(path, html));
 }
 
-const opConsultRecordHandler = (request, response) => {
+
+
+const opConsultRecordHandler = (request, response, example) => {
     let chunks = [];
     // 'data' event is emitted on every chunk received
     request.on("data", (chunk) => {
@@ -231,29 +240,48 @@ const opConsultRecordHandler = (request, response) => {
     });
     // when all chunks are received, 'end' event is emitted.
     request.on("end", () => {
-      //const data = Buffer.concat(chunks);
-      //const querystring = data.toString();
-      //createPdf("/Users/angshus/work/projects/fhir-pdf/public/op-consult.template", 
-      createPdf(path.resolve(__dirname, 'public/op-consult.template'), 
-        { fhirPath: fhirPath, person: person, fhirPatient: fhirPatient } 
-      ).then(data => {
-        console.log('sending application/pdf');
-        response.writeHead(200, {
-            "Content-Type": "application/pdf",
-          });
-          response.write(data);
-          response.end();
-      }).catch(err => {
-        response.writeHead(500, {
-            "Content-Type": "application/json",
-          });
-          response.write(
-            JSON.stringify({
-              message: err,
-            })
-          );
-          response.end();
-      });
+        let fhirData = fhirPatient;
+        if (!example) {
+            const buff = Buffer.concat(chunks);
+            const jsonString = buff.toString();
+            try {
+                fhirData = JSON.parse(jsonString);
+            } catch(err) {
+                response.writeHead(400, {
+                    "Content-Type": "application/json",
+                });
+                console.log(err);
+                response.write(JSON.stringify({message: err.toString()}));
+                response.end();
+                return;
+            }
+            // console.log('fhirData: ');
+            // console.log(fhirData);
+        }
+        
+        createPdf(path.resolve(__dirname, 'public/op-consult.template'), 
+            { 
+                fhirPath: fhirPath, 
+                tmplData: fhirData, 
+                fhirModel:fhirpath_r4_model,
+                evaluatePath: function(expression, mData) {
+                    return fhirPath.evaluate(mData || fhirData, expression, null, fhirpath_r4_model);
+                }
+            } 
+        ).then(data => {
+            console.log('sending application/pdf');
+            response.writeHead(200, {
+                "Content-Type": "application/pdf",
+            });
+            response.write(data);
+            response.end();
+        }).catch(err => {
+            response.writeHead(500, {
+                "Content-Type": "application/json",
+            });
+            response.write(JSON.stringify({message: err,}));
+            response.end();
+        });
     });
 };
   

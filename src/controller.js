@@ -3,7 +3,12 @@ const fhirPath = require('fhirpath');
 const fhirpath_r4_model = require('fhirpath/fhir-context/r4');
 const fs = require('fs'),
     ejs = require("ejs");
-const path = require('path');    
+const path = require('path');  
+const correlator = require("correlation-id");  
+
+function printLog(msg) {
+    console.log("%s: %s", correlator.getId(), msg);
+}
 
 var fhirPatient = {
     "resourceType": "Patient",
@@ -164,31 +169,32 @@ var fhirPatient = {
 function generateHtml(template, data) {
     return new Promise((resolve, reject) => {
         try {
-            console.log("generating html .... ");
+            printLog("generating html .... ");
             let tmplFn = ejs.compile(template);
             let html = tmplFn(data);
             resolve(html);
         } catch (err) {
-            console.log(err);
+            printLog(err);
             reject('Could not generate html');
         }
     });
 }
 
+
 var templateCache = [];
 
 function fetchTemplate(path) {
     return new Promise((resolve, reject) => {
-        console.log("fetching template .... ");
+        printLog("fetching template .... ");
         const cachedContent = templateCache.find( e => e.path === path);
         if (cachedContent) {
-            console.log("Returning cached template .... ");
+            printLog("Returning cached template .... ");
             resolve(cachedContent.content);
             return;
         }
         fs.readFile(path, 'utf8', (err, content) => {
             if (err) { 
-                console.log(err); 
+                printLog(err); 
                 reject('Could not read template file'); 
             } else {
                 templateCache.push({
@@ -202,12 +208,12 @@ function fetchTemplate(path) {
 }
 
 function generatePdf(path, html) {
-    console.log('launching browser .... ');
+    printLog('launching browser .... ');
     return puppeteer.launch()
             .then((browser) => {
                 return browser.newPage()
                     .then((page) => {
-                        console.log('Generating pdf with page .... ');
+                        printLog('Generating pdf with page .... ');
                         return page.setContent(html, { waitUntil: 'networkidle0' })
                             .then(() => page.emulateMediaType('screen'))
                             .then(() => page.pdf({
@@ -217,7 +223,7 @@ function generatePdf(path, html) {
                                     format: 'A4',
                                 }));
                     }).finally(() => {
-                        console.log('closing browser ... ');
+                        printLog('closing browser ... ');
                         return browser.close();
                     });
             });
@@ -240,47 +246,48 @@ const opConsultRecordHandler = (request, response, example) => {
     });
     // when all chunks are received, 'end' event is emitted.
     request.on("end", () => {
-        let fhirData = fhirPatient;
-        if (!example) {
-            const buff = Buffer.concat(chunks);
-            const jsonString = buff.toString();
-            try {
-                fhirData = JSON.parse(jsonString);
-            } catch(err) {
-                response.writeHead(400, {
+        correlator.withId(() => {
+            let fhirData = fhirPatient;
+            if (!example) {
+                const buff = Buffer.concat(chunks);
+                const jsonString = buff.toString();
+                try {
+                    fhirData = JSON.parse(jsonString);
+                } catch(err) {
+                    response.writeHead(400, {
+                        "Content-Type": "application/json",
+                    });
+                    //console.log(err);
+                    printLog(err);
+                    response.write(JSON.stringify({message: err.toString()}));
+                    response.end();
+                    return;
+                }
+            }
+            
+            createPdf(path.resolve(__dirname, './../public/op-consult.template'), 
+                { 
+                    fhirPath: fhirPath, 
+                    tmplData: fhirData, 
+                    fhirModel:fhirpath_r4_model,
+                    evaluatePath: function(expression, mData) {
+                        return fhirPath.evaluate(mData || fhirData, expression, null, fhirpath_r4_model);
+                    }
+                } 
+            ).then(data => {
+                printLog('sending application/pdf');
+                response.writeHead(200, {
+                    "Content-Type": "application/pdf",
+                });
+                response.write(data);
+                response.end();
+            }).catch(err => {
+                response.writeHead(500, {
                     "Content-Type": "application/json",
                 });
-                console.log(err);
-                response.write(JSON.stringify({message: err.toString()}));
+                response.write(JSON.stringify({message: err,}));
                 response.end();
-                return;
-            }
-            // console.log('fhirData: ');
-            // console.log(fhirData);
-        }
-        
-        createPdf(path.resolve(__dirname, 'public/op-consult.template'), 
-            { 
-                fhirPath: fhirPath, 
-                tmplData: fhirData, 
-                fhirModel:fhirpath_r4_model,
-                evaluatePath: function(expression, mData) {
-                    return fhirPath.evaluate(mData || fhirData, expression, null, fhirpath_r4_model);
-                }
-            } 
-        ).then(data => {
-            console.log('sending application/pdf');
-            response.writeHead(200, {
-                "Content-Type": "application/pdf",
             });
-            response.write(data);
-            response.end();
-        }).catch(err => {
-            response.writeHead(500, {
-                "Content-Type": "application/json",
-            });
-            response.write(JSON.stringify({message: err,}));
-            response.end();
         });
     });
 };

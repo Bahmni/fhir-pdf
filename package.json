@@ -2,7 +2,7 @@
   "name": "fhir-pdf",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "correlation-id": "^5.0.3",
     "ejs": "^3.1.10",
     "fhirpath": "^3.13.2",
     "http": "^0.0.1-security",

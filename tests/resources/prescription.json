@@ -1,0 +1,683 @@
+{
+    "resourceType": "Bundle",
+    "id": "PR-1121",
+    "meta": {
+      "versionId": "1.0",
+      "lastUpdated": "2024-02-23T15:14:48.000+05:30",
+      "profile": [
+        "https://nrces.in/ndhm/fhir/r4/StructureDefinition/DocumentBundle"
+      ]
+    },
+    "identifier": {
+      "system": "http://www.myorg.com//bundle",
+      "value": "PR-1121"
+    },
+    "type": "document",
+    "timestamp": "2024-02-23T15:14:48.000+05:30",
+    "entry": [
+      {
+        "fullUrl": "Composition/f096e5cc-55b9-4710-a5cc-41accfd718b4",
+        "resource": {
+          "resourceType": "Composition",
+          "id": "f096e5cc-55b9-4710-a5cc-41accfd718b4",
+          "meta": {
+            "profile": [
+              "https://nrces.in/ndhm/fhir/r4/StructureDefinition/PrescriptionRecord"
+            ]
+          },
+          "identifier": {
+            "system": "http://www.myorg.com/document",
+            "value": "f096e5cc-55b9-4710-a5cc-41accfd718b4"
+          },
+          "status": "final",
+          "type": {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "440545006",
+                "display": "Prescription record"
+              }
+            ]
+          },
+          "subject": {
+            "reference": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56"
+          },
+          "encounter": {
+            "reference": "Encounter/571db73c-9294-485a-b3b8-addd7e35694f"
+          },
+          "date": "2024-02-23T15:14:48+05:30",
+          "author": [
+            {
+              "reference": "Organization/b4831eb8-c79a-11e2-b284-107d46e7b2c5",
+              "type": "Organization"
+            }
+          ],
+          "title": "Prescription",
+          "section": [
+            {
+              "title": "OPD Prescription",
+              "code": {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "440545006",
+                    "display": "Prescription record"
+                  }
+                ]
+              },
+              "entry": [
+                {
+                  "reference": "MedicationRequest/560b2758-f29b-4cc5-80e4-15225de18b64"
+                },
+                {
+                  "reference": "MedicationRequest/aa76903e-2ce2-498a-aa8f-7fe49b89a691"
+                },
+                {
+                  "reference": "MedicationRequest/87aededd-4679-4888-a029-251537a2e44b"
+                },
+                {
+                  "reference": "Binary/981730a2-037f-4999-b16e-e86b63d86968"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "fullUrl": "Organization/b4831eb8-c79a-11e2-b284-107d46e7b2c5",
+        "resource": {
+          "resourceType": "Organization",
+          "id": "b4831eb8-c79a-11e2-b284-107d46e7b2c5",
+          "name": "Jan Swasthya Sahyog",
+                  "contact": [{
+                      "telecom": [{
+               "system": "phone",
+               "value": "(+91) 011-2651-5050"
+             },
+             {
+               "system": "email",
+               "value": "care@jss.org"
+             }]
+                  }]
+        }
+      },
+      {
+        "fullUrl": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56",
+        "resource": {
+          "resourceType": "Patient",
+          "id": "f2f09953-faf0-4f9d-901b-cb048821ad56",
+          "meta": {
+            "lastUpdated": "2024-02-23T15:12:53.000+05:30"
+          },
+          "identifier": [
+            {
+              "id": "6d960c3d-cac1-4f84-ad6a-53bbd3013c1b",
+              "use": "official",
+              "type": {
+                "coding": [
+                  {
+                    "code": "b46af68a-c79a-11e2-b284-107d46e7b2c5"
+                  }
+                ],
+                "text": "Patient Identifier"
+              },
+              "value": "GAN310303"
+            },
+            {
+              "id": "c2ea5d82-efa3-4af9-acac-49435936f27b",
+              "use": "usual",
+              "type": {
+                "coding": [
+                  {
+                    "code": "c8f8b408-6f0a-11ed-a837-0242ac120002"
+                  }
+                ],
+                "text": "ABHA Address"
+              },
+              "value": "phr_testing1@sbx"
+            },
+            {
+              "id": "bc145558-6421-4edd-abdc-f669e6c45de7",
+              "use": "usual",
+              "type": {
+                "coding": [
+                  {
+                    "code": "d7e40525-a20d-11ed-bf49-0242ac12000a"
+                  }
+                ],
+                "text": "ABHA Number"
+              },
+              "value": "91-4400-2467-0281"
+            }
+          ],
+          "active": true,
+          "name": [
+            {
+              "id": "5c653931-ef95-4946-bcc5-a8c22f6751bb",
+              "family": "Chaudhary",
+              "given": [
+                "Rachna"
+              ]
+            }
+          ],
+          "gender": "female",
+          "birthDate": "1983-04-16",
+          "deceasedBoolean": false,
+          "address": [
+            {
+              "id": "1c1b0c07-813c-46c7-8ecc-f6a73277e06f",
+              "use": "home",
+              "city": "Demo",
+              "district": "GHAZIABAD",
+              "state": "UTTAR PRADESH",
+              "postalCode": "201002"
+            }
+          ]
+        }
+      },
+      {
+        "fullUrl": "Encounter/571db73c-9294-485a-b3b8-addd7e35694f",
+        "resource": {
+          "resourceType": "Encounter",
+          "id": "571db73c-9294-485a-b3b8-addd7e35694f",
+          "meta": {
+            "lastUpdated": "2024-02-23T15:14:48.000+05:30",
+            "tag": [
+              {
+                "system": "http://fhir.openmrs.org/ext/encounter-tag",
+                "code": "encounter",
+                "display": "Encounter"
+              }
+            ]
+          },
+          "status": "unknown",
+          "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "AMB",
+            "display": "ambulatory"
+          },
+          "type": [
+            {
+              "coding": [
+                {
+                  "system": "http://fhir.openmrs.org/code-system/encounter-type",
+                  "code": "da7a4fe0-0a6a-11e3-939c-8c50edb4be99",
+                  "display": "Consultation"
+                }
+              ]
+            }
+          ],
+          "subject": {
+            "reference": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56",
+            "type": "Patient",
+            "display": "Rachna Chaudhary (Patient Identifier: GAN310303)"
+          },
+          "participant": [
+            {
+              "individual": {
+                "reference": "Practitioner/6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+                "type": "Practitioner",
+                "identifier": {
+                  "value": "admin"
+                },
+                "display": "System Administrator (Identifier: admin)"
+              }
+            }
+          ],
+          "period": {
+            "start": "2024-02-23T15:14:48+05:30"
+          },
+          "location": [
+            {
+              "location": {
+                "reference": "Location/b4831eb8-c79a-11e2-b284-107d46e7b2c5",
+                "type": "Location",
+                "display": "Ganiyari"
+              }
+            }
+          ],
+          "partOf": {
+            "reference": "Encounter/e8460310-ff7a-4e8a-a0df-e4d64771c94c",
+            "type": "Encounter"
+          }
+        }
+      },
+      {
+        "fullUrl": "Medication/8a47f8f8-53b2-4647-b715-176b38861a84",
+        "resource": {
+          "resourceType": "Medication",
+          "id": "8a47f8f8-53b2-4647-b715-176b38861a84",
+          "meta": {
+            "lastUpdated": "2014-02-22T20:48:25.000+05:30"
+          },
+          "extension": [
+            {
+              "url": "http://fhir.openmrs.org/ext/medicine",
+              "extension": [
+                {
+                  "url": "http://fhir.openmrs.org/ext/medicine#drugName",
+                  "valueString": "Paracetamol 500mg"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "code": "25642826-0cf1-4e9f-a842-6e435b741200",
+                "display": "Paracetamol"
+              }
+            ],
+            "text": "Paracetamol 500mg"
+          },
+          "status": "active",
+          "form": {
+            "coding": [
+              {
+                "code": "7ce563d5-6c1d-11e4-a1f2-ba526e30a5ad",
+                "display": "Tablet"
+              }
+            ],
+            "text": "Tablet"
+          }
+        }
+      },
+      {
+        "fullUrl": "Medication/7c006824-da62-42a0-bf74-5cd9e354a54a",
+        "resource": {
+          "resourceType": "Medication",
+          "id": "7c006824-da62-42a0-bf74-5cd9e354a54a",
+          "meta": {
+            "lastUpdated": "2014-02-22T20:07:54.000+05:30"
+          },
+          "extension": [
+            {
+              "url": "http://fhir.openmrs.org/ext/medicine",
+              "extension": [
+                {
+                  "url": "http://fhir.openmrs.org/ext/medicine#drugName",
+                  "valueString": "Tramadol 50mg"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "code": "ea14a641-9417-4899-94cf-f636cf9c5616",
+                "display": "Tramaadol"
+              }
+            ],
+            "text": "Tramadol 50mg"
+          },
+          "status": "active",
+          "form": {
+            "coding": [
+              {
+                "code": "7ce5ec54-6c1d-11e4-a1f2-ba526e30a5ad",
+                "display": "Capsule"
+              }
+            ],
+            "text": "Capsule"
+          }
+        }
+      },
+      {
+        "fullUrl": "Medication/77c3dabb-e647-4662-9c76-47e4ff97f069",
+        "resource": {
+          "resourceType": "Medication",
+          "id": "77c3dabb-e647-4662-9c76-47e4ff97f069",
+          "meta": {
+            "lastUpdated": "2014-02-22T20:06:46.000+05:30"
+          },
+          "extension": [
+            {
+              "url": "http://fhir.openmrs.org/ext/medicine",
+              "extension": [
+                {
+                  "url": "http://fhir.openmrs.org/ext/medicine#drugName",
+                  "valueString": "Asprin 325mg"
+                }
+              ]
+            }
+          ],
+          "code": {
+            "coding": [
+              {
+                "code": "ba571782-8630-49cb-a94f-d1067bec927f",
+                "display": "Asprin"
+              }
+            ],
+            "text": "Asprin 325mg"
+          },
+          "status": "active",
+          "form": {
+            "coding": [
+              {
+                "code": "7ce563d5-6c1d-11e4-a1f2-ba526e30a5ad",
+                "display": "Tablet"
+              }
+            ],
+            "text": "Tablet"
+          }
+        }
+      },
+      {
+        "fullUrl": "MedicationRequest/560b2758-f29b-4cc5-80e4-15225de18b64",
+        "resource": {
+          "resourceType": "MedicationRequest",
+          "id": "560b2758-f29b-4cc5-80e4-15225de18b64",
+          "meta": {
+            "lastUpdated": "2024-02-23T15:19:43.000+05:30"
+          },
+          "status": "stopped",
+          "intent": "order",
+          "priority": "routine",
+          "medicationReference": {
+            "reference": "Medication/8a47f8f8-53b2-4647-b715-176b38861a84",
+            "type": "Medication",
+            "display": "Paracetamol 500mg"
+          },
+          "subject": {
+            "reference": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56"
+          },
+          "encounter": {
+            "reference": "Encounter/571db73c-9294-485a-b3b8-addd7e35694f",
+            "type": "Encounter"
+          },
+          "authoredOn": "2024-02-23T15:19:43+05:30",
+          "requester": {
+            "reference": "Practitioner/6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+            "type": "Practitioner",
+            "identifier": {
+              "value": "admin"
+            },
+            "display": "System Administrator (Identifier: admin)"
+          },
+          "dosageInstruction": [
+            {
+              "text": "2.0 Tablet(s) Once a day Oral 2 Day(s)",
+              "timing": {
+                "event": [
+                  "2024-02-23T15:19:43+05:30"
+                ],
+                "repeat": {
+                  "duration": 2,
+                  "durationUnit": "d"
+                },
+                "code": {
+                  "coding": [
+                    {
+                      "code": "8cd90ada-2dfc-11e4-894f-60175255b68f",
+                      "display": "Once a day"
+                    }
+                  ],
+                  "text": "Once a day"
+                }
+              },
+              "asNeededBoolean": false,
+              "route": {
+                "coding": [
+                  {
+                    "code": "8c6c9317-2dfc-11e4-894f-60175255b68f",
+                    "display": "Oral"
+                  }
+                ],
+                "text": "Oral"
+              },
+              "doseAndRate": [
+                {
+                  "doseQuantity": {
+                    "value": 2,
+                    "unit": "Tablet(s)",
+                    "code": "e2b80de6-a30b-4ec3-869a-a22265717a71"
+                  }
+                }
+              ]
+            }
+          ],
+          "dispenseRequest": {
+            "validityPeriod": {
+              "start": "2024-02-23T15:19:43+05:30"
+            },
+            "numberOfRepeatsAllowed": 0,
+            "quantity": {
+              "value": 4,
+              "unit": "Tablet(s)",
+              "code": "e2b80de6-a30b-4ec3-869a-a22265717a71"
+            }
+          }
+        }
+      },
+      {
+        "fullUrl": "MedicationRequest/aa76903e-2ce2-498a-aa8f-7fe49b89a691",
+        "resource": {
+          "resourceType": "MedicationRequest",
+          "id": "aa76903e-2ce2-498a-aa8f-7fe49b89a691",
+          "meta": {
+            "lastUpdated": "2024-02-23T15:19:43.000+05:30"
+          },
+          "status": "stopped",
+          "intent": "order",
+          "priority": "routine",
+          "medicationReference": {
+            "reference": "Medication/7c006824-da62-42a0-bf74-5cd9e354a54a",
+            "type": "Medication",
+            "display": "Tramadol 50mg"
+          },
+          "subject": {
+            "reference": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56"
+          },
+          "encounter": {
+            "reference": "Encounter/571db73c-9294-485a-b3b8-addd7e35694f",
+            "type": "Encounter"
+          },
+          "authoredOn": "2024-02-23T15:19:43+05:30",
+          "requester": {
+            "reference": "Practitioner/6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+            "type": "Practitioner",
+            "identifier": {
+              "value": "admin"
+            },
+            "display": "System Administrator (Identifier: admin)"
+          },
+          "dosageInstruction": [
+            {
+              "text": "3.0 Capsule(s) Twice a day Oral 3 Day(s)",
+              "timing": {
+                "event": [
+                  "2024-02-23T15:19:43+05:30"
+                ],
+                "repeat": {
+                  "duration": 3,
+                  "durationUnit": "d"
+                },
+                "code": {
+                  "coding": [
+                    {
+                      "code": "8ce72c24-2dfc-11e4-894f-60175255b68f",
+                      "display": "Twice a day"
+                    }
+                  ],
+                  "text": "Twice a day"
+                }
+              },
+              "asNeededBoolean": false,
+              "route": {
+                "coding": [
+                  {
+                    "code": "8c6c9317-2dfc-11e4-894f-60175255b68f",
+                    "display": "Oral"
+                  }
+                ],
+                "text": "Oral"
+              },
+              "doseAndRate": [
+                {
+                  "doseQuantity": {
+                    "value": 3,
+                    "unit": "Capsule(s)",
+                    "code": "53854ae7-1c1f-45d8-90fd-5a53ce463ba7"
+                  }
+                }
+              ]
+            }
+          ],
+          "dispenseRequest": {
+            "validityPeriod": {
+              "start": "2024-02-23T15:19:43+05:30"
+            },
+            "numberOfRepeatsAllowed": 0,
+            "quantity": {
+              "value": 18,
+              "unit": "Capsule(s)",
+              "code": "53854ae7-1c1f-45d8-90fd-5a53ce463ba7"
+            }
+          }
+        }
+      },
+      {
+        "fullUrl": "MedicationRequest/87aededd-4679-4888-a029-251537a2e44b",
+        "resource": {
+          "resourceType": "MedicationRequest",
+          "id": "87aededd-4679-4888-a029-251537a2e44b",
+          "meta": {
+            "lastUpdated": "2024-02-23T15:19:43.000+05:30"
+          },
+          "status": "stopped",
+          "intent": "order",
+          "priority": "routine",
+          "medicationReference": {
+            "reference": "Medication/77c3dabb-e647-4662-9c76-47e4ff97f069",
+            "type": "Medication",
+            "display": "Asprin 325mg"
+          },
+          "subject": {
+            "reference": "Patient/f2f09953-faf0-4f9d-901b-cb048821ad56"
+          },
+          "encounter": {
+            "reference": "Encounter/571db73c-9294-485a-b3b8-addd7e35694f",
+            "type": "Encounter"
+          },
+          "authoredOn": "2024-02-23T15:19:43+05:30",
+          "requester": {
+            "reference": "Practitioner/6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+            "type": "Practitioner",
+            "identifier": {
+              "value": "admin"
+            },
+            "display": "System Administrator (Identifier: admin)"
+          },
+          "dosageInstruction": [
+            {
+              "text": "1.0 Tablet(s) Once a day Oral 2 Day(s)",
+              "timing": {
+                "event": [
+                  "2024-02-23T15:19:43+05:30"
+                ],
+                "repeat": {
+                  "duration": 2,
+                  "durationUnit": "d"
+                },
+                "code": {
+                  "coding": [
+                    {
+                      "code": "8cd90ada-2dfc-11e4-894f-60175255b68f",
+                      "display": "Once a day"
+                    }
+                  ],
+                  "text": "Once a day"
+                }
+              },
+              "asNeededBoolean": false,
+              "route": {
+                "coding": [
+                  {
+                    "code": "8c6c9317-2dfc-11e4-894f-60175255b68f",
+                    "display": "Oral"
+                  }
+                ],
+                "text": "Oral"
+              },
+              "doseAndRate": [
+                {
+                  "doseQuantity": {
+                    "value": 1,
+                    "unit": "Tablet(s)",
+                    "code": "e2b80de6-a30b-4ec3-869a-a22265717a71"
+                  }
+                }
+              ]
+            }
+          ],
+          "dispenseRequest": {
+            "validityPeriod": {
+              "start": "2024-02-23T15:19:43+05:30"
+            },
+            "numberOfRepeatsAllowed": 0,
+            "quantity": {
+              "value": 2,
+              "unit": "Tablet(s)",
+              "code": "e2b80de6-a30b-4ec3-869a-a22265717a71"
+            }
+          }
+        }
+      },
+      {
+        "fullUrl": "Practitioner/6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+        "resource": {
+          "resourceType": "Practitioner",
+          "id": "6b62bdc7-a98f-429a-a2f7-17076ad6ec71",
+          "meta": {
+            "lastUpdated": "2023-12-01T07:52:22.000+05:30"
+          },
+          "identifier": [
+            {
+              "system": "http://fhir.openmrs.org/ext/provider/identifier",
+              "value": "admin"
+            }
+          ],
+          "active": true,
+          "name": [
+            {
+               "text": "Dr. Yogesh Jain",
+               "family" : "Jain",
+               "given" : ["Yogesh", "Kumar"],
+               "suffix" : ["MD", "FRCS"]
+            }
+          ],
+          "gender": "male",
+                  "telecom": [
+            {
+              "system": "phone",
+              "value": "(+91) 011-2651-5050"
+            },
+            {
+              "system": "email",
+              "value": "drJain@jss.org"
+            }
+          ],
+          "qualification" : [
+             {
+                "identifier": [
+                  {
+                    "system": "https://www.nmc.org.in/",
+                    "value": "ABCD1234"
+                  }
+                ],
+               "code": {
+                "coding": [
+                  {
+                     "system": "http://terminology.hl7.org/CodeSystem/v2-0360/2.7",
+                     "code": "BS",
+                     "display": "Bachelor of Science"
+                  }
+                 ],
+                 "text": "Bachelor of Science"
+              }
+            }
+          ] 
+        }
+      }
+    ]
+  }

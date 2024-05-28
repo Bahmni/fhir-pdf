@@ -5,6 +5,8 @@ const fs = require('fs'),
     ejs = require("ejs");
 const path = require('path');  
 const correlator = require("correlation-id");  
+const cacheTemplate= process.env.CACHE_TEMPLATE ? JSON.parse(process.env.CACHE_TEMPLATE) : false;
+const templateBaseUrl = process.env.TMPL_BASE_URL;
 
 function printLog(msg) {
     console.log("%s: %s", correlator.getId(), msg);
@@ -172,6 +174,7 @@ function generateHtml(template, data) {
             printLog("generating html .... ");
             let tmplFn = ejs.compile(template);
             let html = tmplFn(data);
+            //printLog(html);
             resolve(html);
         } catch (err) {
             printLog(err);
@@ -186,21 +189,27 @@ var templateCache = [];
 function fetchTemplate(path) {
     return new Promise((resolve, reject) => {
         printLog("fetching template .... ");
-        const cachedContent = templateCache.find( e => e.path === path);
-        if (cachedContent) {
-            printLog("Returning cached template .... ");
-            resolve(cachedContent.content);
-            return;
+        if (cacheTemplate === true) {
+          const cachedContent = templateCache.find( e => e.path === path);
+          if (cachedContent) {
+              printLog("Returning cached template .... ");
+              resolve(cachedContent.content);
+              return;
+          }
         }
+        const fetchFromServer = templateBaseUrl === undefined || templateBaseUrl.trim() === '';
+        
         fs.readFile(path, 'utf8', (err, content) => {
             if (err) { 
                 printLog(err); 
                 reject('Could not read template file'); 
             } else {
-                templateCache.push({
-                    "path": path,
-                    "content": content
-                });
+                if (cacheTemplate === true) {
+                  templateCache.push({
+                      "path": path,
+                      "content": content
+                  });
+                }
                 resolve(content);
             }
         });
@@ -235,9 +244,15 @@ function createPdf(path, data) {
         .then((html) => generatePdf(path, html));
 }
 
+const opConsultationRecordHandler = (request, response, example) => {
+    requestHandler(request, response, example, './../public/op-consult.template');
+}
 
+const prescriptionRecordHandler = (request, response, example) => {
+  requestHandler(request, response, example, './../public/prescription.template');
+}
 
-const opConsultRecordHandler = (request, response, example) => {
+const requestHandler = (request, response, example, templatePath) => {
     let chunks = [];
     // 'data' event is emitted on every chunk received
     request.on("data", (chunk) => {
@@ -257,23 +272,38 @@ const opConsultRecordHandler = (request, response, example) => {
                     response.writeHead(400, {
                         "Content-Type": "application/json",
                     });
-                    //console.log(err);
                     printLog(err);
                     response.write(JSON.stringify({message: err.toString()}));
                     response.end();
                     return;
                 }
             }
-            
-            createPdf(path.resolve(__dirname, './../public/op-consult.template'), 
+            createPdf(path.resolve(__dirname, templatePath), 
                 { 
                     fhirPath: fhirPath, 
                     tmplData: fhirData, 
                     fhirModel:fhirpath_r4_model,
+                    patient: fhirPath.evaluate(fhirData, 'Bundle.entry.select(resource as Patient)', null, fhirpath_r4_model),
                     evaluatePath: function(expression, mData) {
                         return fhirPath.evaluate(mData || fhirData, expression, null, fhirpath_r4_model);
+                    },
+                    strToLocalDate: function(value) {
+                      return value ? new Date(value).toLocaleDateString() : "";
+                    },
+                    strToLocalDateTime: function(value) {
+                      return value ? new Date(value).toLocaleString() : "";
+                    },
+                    getAge: function(dateString) {
+                      var today = new Date();
+                      var birthDate = new Date(dateString);
+                      var age = today.getFullYear() - birthDate.getFullYear();
+                      var m = today.getMonth() - birthDate.getMonth();
+                      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                      }
+                      return age;
                     }
-                } 
+                }   
             ).then(data => {
                 printLog('sending application/pdf');
                 response.writeHead(200, {
@@ -305,6 +335,7 @@ const defaultHandler = (request, response) => {
 };
   
 module.exports = {
-    opConsultRecordHandler,
+    opConsultationRecordHandler,
+    prescriptionRecordHandler,
     defaultHandler,
 };

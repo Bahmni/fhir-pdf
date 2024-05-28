@@ -1,18 +1,21 @@
-const { opConsultRecordHandler, defaultHandler } = require("./controller");
+const { opConsultationRecordHandler, prescriptionRecordHandler,  defaultHandler } = require("./controller");
 
 const routes = (request, response) => {
   const reqURL = request.url;
   const reqMethod = request.method;
   switch (reqMethod) {
     case "GET": {
-      if (reqURL === "/op-consult-record") {
+      if (reqURL === "/op-consult") {
         opConsultRecordHandler(request, response, true);
       }
       break;
     }
     case "POST": {
-        if (reqURL === "/op-consult-record") {
-            opConsultRecordHandler(request, response, false);
+        if (reqURL === "/op-consult") {
+          opConsultationRecordHandler(request, response, false);
+        }
+        if (reqURL === "/prescription") {
+          prescriptionRecordHandler(request, response, false);
         }
         break;
     }

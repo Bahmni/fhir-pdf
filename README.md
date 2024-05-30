@@ -9,6 +9,9 @@ Pre-requisites
 ------------
 - nodejs 
 
+Developed with node version - v22.2.0.  
+If you are developing with multiple nodejs versions, use [NVM](https://github.com/nvm-sh/nvm)
+
 Installation
 ------------
 1. Install dependencies

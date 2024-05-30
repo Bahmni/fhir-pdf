@@ -25,6 +25,11 @@ This will start the server on port 9000 by default
 You may provide variables through the .env file
 > node  --env-file=.env server.js
 
+Development
+------------
+The service first uses [EJS](https://ejs.co/#features) templates to bind a HTML template with the data, and then uses [Puppeteer](https://pptr.dev/) to convert the generated HTML to PDF. 
+[FhirPath](https://www.hl7.org/fhirpath/) is used as expression insides the ejs templates. See [fhirpath.js](https://github.com/HL7/fhirpath.js) for help on how to evaluate expressions.  
+
 Usage
 ------------
 > curl -X POST --data "@./tests/resources/prescription.json" http://localhost:9000/prescription --output prescription.pdf

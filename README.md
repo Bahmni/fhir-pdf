@@ -42,3 +42,4 @@ Usage
 | ------------ | ------------ | ------------ |
 | PORT  | server port to listen to  | 3000   |
 | CACHE_TEMPLATE  | if template content should be cached   | true  |
+| TMPL_BASE_URL   | base path of the templates. Can be http or file-path  | http://localhost:8000 or /Users/yourname/templates |

@@ -7,6 +7,7 @@ const path = require('path');
 const correlator = require("correlation-id");  
 const cacheTemplate= process.env.CACHE_TEMPLATE ? JSON.parse(process.env.CACHE_TEMPLATE) : false;
 const templateBaseUrl = process.env.TMPL_BASE_URL;
+const http = require("http");
 
 function printLog(msg) {
     console.log("%s: %s", correlator.getId(), msg);
@@ -183,40 +184,58 @@ function generateHtml(template, data) {
     });
 }
 
-
 var templateCache = [];
 
-function fetchTemplate(path) {
+function fetchTemplate(templatePath) {
     return new Promise((resolve, reject) => {
         printLog("fetching template .... ");
         if (cacheTemplate === true) {
-          const cachedContent = templateCache.find( e => e.path === path);
+          const cachedContent = templateCache.find( e => e.templatePath === templatePath);
           if (cachedContent) {
               printLog("Returning cached template .... ");
               resolve(cachedContent.content);
               return;
           }
         }
-        const fetchFromServer = templateBaseUrl === undefined || templateBaseUrl.trim() === '';
-        
-        fs.readFile(path, 'utf8', (err, content) => {
-            if (err) { 
-                printLog(err); 
-                reject('Could not read template file'); 
-            } else {
+        if (templatePath.startsWith("http")) {
+            let body = '';
+            http.get(templatePath, function(res) {
+              res.on('data', function(chunk) {
+                body += chunk;
+              });
+              res.on('end', function() {
                 if (cacheTemplate === true) {
                   templateCache.push({
-                      "path": path,
-                      "content": content
+                      "path": templatePath,
+                      "content": body
                   });
                 }
-                resolve(content);
-            }
-        });
+                resolve(body);
+              });
+            }).on('error', err => {
+              printLog(err); 
+              reject('Could not read template file'); 
+            });
+        } else {
+            fs.readFile(templatePath, 'utf8', (err, content) => {
+              if (err) { 
+                  printLog(err); 
+                  reject('Could not read template file'); 
+              } else {
+                  if (cacheTemplate === true) {
+                    templateCache.push({
+                        "templatePath": templatePath,
+                        "content": content
+                    });
+                  }
+                  resolve(content);
+              }
+            });
+        }
     });
 }
 
-function generatePdf(path, html) {
+function generatePdf(templatePath, html) {
     printLog('launching browser .... ');
     return puppeteer.launch()
             .then((browser) => {
@@ -226,7 +245,7 @@ function generatePdf(path, html) {
                         return page.setContent(html, { waitUntil: 'networkidle0' })
                             .then(() => page.emulateMediaType('screen'))
                             .then(() => page.pdf({
-                                    path: path + ".pdf",
+                                    //path: path.resolve(__dirname, './../output', path.basename(templatePath)) + ".pdf",
                                     margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
                                     printBackground: true,
                                     format: 'A4',
@@ -238,18 +257,19 @@ function generatePdf(path, html) {
             });
 }
 
-function createPdf(path, data) {
-    return fetchTemplate(path)
+function createPdf(templatePath, data) {
+    return fetchTemplate(templatePath)
         .then((content) => generateHtml(content, data))
-        .then((html) => generatePdf(path, html));
+        .then((html) => generatePdf(templatePath, html));
 }
 
 const opConsultationRecordHandler = (request, response, example) => {
-    requestHandler(request, response, example, './../public/op-consult.template');
+  requestHandler(request, response, example, templateBaseUrl + '/op-consult.template');
+    
 }
 
 const prescriptionRecordHandler = (request, response, example) => {
-  requestHandler(request, response, example, './../public/prescription.template');
+  requestHandler(request, response, example, templateBaseUrl + '/prescription.template');
 }
 
 const requestHandler = (request, response, example, templatePath) => {
@@ -278,7 +298,7 @@ const requestHandler = (request, response, example, templatePath) => {
                     return;
                 }
             }
-            createPdf(path.resolve(__dirname, templatePath), 
+            createPdf(templatePath, 
                 { 
                     fhirPath: fhirPath, 
                     tmplData: fhirData, 

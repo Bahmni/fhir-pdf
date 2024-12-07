@@ -14,6 +14,6 @@
     "ejs": "^3.1.10",
     "fhirpath": "^3.13.2",
     "http": "^0.0.1-security",
-    "puppeteer": "^22.9.0"
+    "puppeteer": "^22.11.2"
   }
 }
